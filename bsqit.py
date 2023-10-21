@@ -8,23 +8,27 @@ def main():
 
     def parse_args():
 
-        parser = argparse.ArgumentParser(
-            description=f"Example [POST]: {sys.argv[0]} -u target.com/login.php -m post -vp username -p password=test,submit=test -tc 'welcome to admin page !'")
+        print(f"""
+Example [GET]: {sys.argv[0]} -u target.com/news.php?id=1 -m get -q queries.txt -vp id=1 -tc 'Car Accident'
+Example [POST]: {sys.argv[0]} -u target.com/login.php -m post -q queries.txt -vp user -p pass=test,submit=test -tc 'welcome to admin page!'
+""")
+
+        parser = argparse.ArgumentParser()
         parser._optionals.title = 'OPTIONS'
         parser.add_argument(
             '-u', '--url', help='target specify to inject [GET/POST]', required=True)
         parser.add_argument(
-            '-m', '--method', help='http method [GET/POST]', default='post', required=True)
+            '-m', '--method', help='http method (get, post) [GET/POST]', default='post', required=True)
         parser.add_argument(
             '-vp', '--vuln-param', help='vulnerable parameter to inject the queries [GET/POST]', required=True)
         parser.add_argument(
             '-p', '--params', help='other parameters [POST]')
         parser.add_argument(
-            '-q', '--query-list', help='list of query [GET/POST]', default='queries.txt')
+            '-q', '--query-list', help='destination to the list of query (default=queries.txt) [GET/POST]', default='queries.txt')
         parser.add_argument(
-            '-tc', '--true-condition', help='indicator for the true condition [GET/POST]')
+            '-tc', '--true-condition', help='indicator for the true condition (Try to find a unique text that only the true condition has!) [GET/POST]')
         parser.add_argument(
-            '-fc', '--false-condition', help='indicator for the false condition [GET/POST]')
+            '-fc', '--false-condition', help='indicator for the false condition (Try to find a unique text that only the false condition has!) [GET/POST]')
 
         return parser.parse_args()
 
@@ -58,9 +62,8 @@ def main():
 
         if params:
 
-            raw_params = [[j for j in (i.split('=')) if j.strip()]
-                          for i in ((options.params).split(',')) if i.strip()]
-            params = {}
+            raw_params = [[j for j in (i.split('=')) if j.strip()] for i in ((options.params).split(',')) if i.strip()]
+            params = {} 
 
             for i in raw_params:
 
@@ -80,12 +83,12 @@ def main():
 
         if trucon and falcon:
 
-            print('|_[Error] => yes')
+            print('|_[Error] => cannot use false condition if true condition is used, and vice versa')
             exit()
 
         elif not trucon and not falcon:
 
-            print('|_[Error] => not')
+            print('|_[Error] => true condition or false condition was not set')
             exit()
 
         if trucon:
@@ -109,12 +112,12 @@ def main():
         if trucon and falcon:
 
             print(
-                '|_[Error] => cannot use false condition if true condition is in use')
+                '|_[Error] => cannot use false condition if true condition is used, and vice versa')
             exit()
 
         elif not trucon and not falcon:
 
-            print('|_[Error] => not')
+            print('|_[Error] => true condition or false condition was not set')
             exit()
 
         if trucon:
@@ -144,7 +147,7 @@ def main():
             if template not in query:
 
                 print(
-                    '|_[Error] => the query doesn\'t contain template string\n')
+                    '|_[Error] => the query doesn\'t contain template string ({@}, {?}, {$})\n')
                 exit()
     # payload list
 

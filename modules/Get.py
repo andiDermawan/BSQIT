@@ -49,8 +49,7 @@ class Get():
                     '{@}', str(start))).replace('{?}', '=')).replace('{$}', str(i)))))
                 index.append(i)
 
-            responses = [req.get(payload, headers=self.headers)
-                         for payload in payloads]
+            responses = [req.get(payload, headers=self.headers) for payload in payloads]
             responses = req.map(responses)
 
             for i, v in enumerate(responses):
