@@ -34,7 +34,7 @@ Example [POST]: {sys.argv[0]} -u target.com/login.php -m post -q queries.txt -vp
 
     options = parse_args()
 
-    print(r"""[ Coded By Andi.D ]
+    print(r"""
  _____________________________________________
 |            _____________________            |
 |           |   Coded By Andi.D   |           |
